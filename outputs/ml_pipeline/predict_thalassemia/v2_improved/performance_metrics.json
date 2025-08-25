@@ -1,0 +1,13 @@
+{
+  "model_name": "XGBoost",
+  "cv_f1_weighted": 0.684525594853326,
+  "cv_f1_macro": 0.5807118396968598,
+  "test_accuracy": 0.7317073170731707,
+  "test_f1_weighted": 0.683120980463536,
+  "train_accuracy": 0.9135802469135802,
+  "train_f1_weighted": 0.9078251584918251,
+  "overfitting_gap": 0.18187292984040948,
+  "features_used": 8,
+  "training_samples": 162,
+  "test_samples": 41
+}

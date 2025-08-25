@@ -1,0 +1,8 @@
+hba2
+hbf
+hypochromia
+mcv
+mentzer_index
+microcytosis
+hba2_elevated
+rbc_hb_ratio

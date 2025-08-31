@@ -1,0 +1,12 @@
+hba2
+mentzer_index
+mcv
+thal_prob_score
+hypochromia
+morphology_score
+hba2_hbf_ratio
+anemia_severity_encoded
+hba
+mch
+rbc_hb_ratio
+rbc

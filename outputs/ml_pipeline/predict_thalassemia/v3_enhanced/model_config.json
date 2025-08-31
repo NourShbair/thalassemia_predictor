@@ -1,0 +1,27 @@
+{
+  "optimal_threshold": 0.09423916786909103,
+  "best_model": "Random Forest",
+  "best_f1_score": 0.7025714601037413,
+  "features": [
+    "sex",
+    "hb",
+    "pcv",
+    "rbc",
+    "mcv",
+    "mch",
+    "mchc",
+    "rdw",
+    "hba",
+    "hba2",
+    "hbf",
+    "mentzer_index",
+    "mentzer_thal_indicator",
+    "rbc_hb_ratio",
+    "microcytosis",
+    "hypochromia",
+    "hba2_elevated",
+    "hba2_normal",
+    "rdw_mcv_ratio",
+    "hba_hba2_ratio"
+  ]
+}

@@ -14,7 +14,7 @@ def page_thalassemia_predictor_body():
     """)
     
     # Load model
-    model_path = 'outputs/ml_pipeline/predict_thalassemia/v2_improved/thalassemia_classifier_improved.pkl'
+    model_path = 'outputs/ml_pipeline/predict_thalassemia/v5_enhanced/best_xgb_model.pkl'
     
     try:
         if os.path.exists(model_path):
@@ -47,20 +47,44 @@ def page_thalassemia_predictor_body():
             st.write("**Hemoglobin Electrophoresis**")
             hba2 = st.number_input("HbA2 (%)", value=2.5, step=0.1)
             hbf = st.number_input("HbF (%)", value=0.5, step=0.1)
+            hba = st.number_input("HbA (%)", value=95.0, step=0.1)
         
         submitted = st.form_submit_button("🔍 Predict Thalassemia Status")
     
     if submitted:
-        # Create the exact 8 features the model expects with CORRECT thresholds
+        # Create all 12 features the model expects
+        mentzer_index = mcv / rbc if rbc > 0 else 0
+        hypochromia = 1 if mch < 27 else 0
+        hba2_hbf_ratio = hba2 / hbf if hbf > 0 else hba2
+        rbc_hb_ratio = rbc / hb if hb > 0 else 0
+        
+        # Calculate composite scores
+        thal_prob_score = (mentzer_index < 13) * 0.3 + (hypochromia) * 0.2 + (hba2 > 3.5) * 0.5
+        morphology_score = hypochromia + (1 if mcv < 80 else 0) + (1 if mentzer_index < 13 else 0)
+        
+        # Anemia severity encoding (0=none, 1=mild, 2=moderate, 3=severe)
+        if hb >= 12:
+            anemia_severity = 0
+        elif hb >= 10:
+            anemia_severity = 1
+        elif hb >= 8:
+            anemia_severity = 2
+        else:
+            anemia_severity = 3
+        
         input_data = {
             'hba2': hba2,
-            'hbf': hbf,
-            'hypochromia': 1 if mch < 27 else 0,  # MCH < 27 indicates hypochromia
+            'mentzer_index': mentzer_index,
             'mcv': mcv,
-            'mentzer_index': mcv / rbc if rbc > 0 else 0,
-            'microcytosis': 1 if mcv < 80 else 0,  # MCV < 80 indicates microcytosis
-            'hba2_elevated': 0,  # Set to 0 - alpha thalassemia doesn't elevate HbA2
-            'rbc_hb_ratio': rbc / hb if hb > 0 else 0
+            'thal_prob_score': thal_prob_score,
+            'hypochromia': hypochromia,
+            'morphology_score': morphology_score,
+            'hba2_hbf_ratio': hba2_hbf_ratio,
+            'anemia_severity_encoded': anemia_severity,
+            'hba': hba,
+            'mch': mch,
+            'rbc_hb_ratio': rbc_hb_ratio,
+            'rbc': rbc
         }
         
         # Create DataFrame
@@ -83,10 +107,10 @@ def page_thalassemia_predictor_body():
             
             # Check if we should override based on clinical rules
             clinical_score = (
-                (1 if input_data['mentzer_index'] < 13 else 0) +
-                input_data['microcytosis'] +
-                input_data['hypochromia'] +
-                (1 if input_data['rbc_hb_ratio'] > 0.4 else 0)
+                (1 if mentzer_index < 13 else 0) +
+                (1 if mcv < 80 else 0) +  # microcytosis
+                hypochromia +
+                (1 if rbc_hb_ratio > 0.4 else 0)
             )
             
             st.write(f"**Debug - Clinical Score:** {clinical_score}/4 (≥3 suggests carrier)")
@@ -115,11 +139,10 @@ def page_thalassemia_predictor_body():
             
             with col2:
                 st.write("**Clinical Indicators:**")
-                mentzer_index = input_data['mentzer_index']
                 st.write(f"• Mentzer Index: {mentzer_index:.2f} {'(Positive)' if mentzer_index < 13 else '(Negative)'}")
-                st.write(f"• Microcytosis: {'Present' if input_data['microcytosis'] else 'Absent'}")
-                st.write(f"• Hypochromia: {'Present' if input_data['hypochromia'] else 'Absent'}")
-                st.write(f"• HbA2 Elevated: {'Yes' if input_data['hba2_elevated'] else 'No'}")
+                st.write(f"• Microcytosis: {'Present' if mcv < 80 else 'Absent'}")
+                st.write(f"• Hypochromia: {'Present' if hypochromia else 'Absent'}")
+                st.write(f"• HbA2 Elevated: {'Yes' if hba2 > 3.5 else 'No'}")
             
             with col3:
                 st.write("**Probability Distribution:**")

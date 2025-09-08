@@ -12,3 +12,4 @@ kaggle.json
 .DS_Store
 .venv/
 venv
+TempVenv/

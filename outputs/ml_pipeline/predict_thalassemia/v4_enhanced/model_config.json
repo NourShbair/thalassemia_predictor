@@ -1,0 +1,19 @@
+{
+  "optimal_threshold": 0.7382867932319641,
+  "best_model": "XGBoost (Optimized)",
+  "best_f1_score": 0.7892953929539296,
+  "features": [
+    "hba2",
+    "mentzer_index",
+    "mcv",
+    "thal_prob_score",
+    "hypochromia",
+    "morphology_score",
+    "hba2_hbf_ratio",
+    "anemia_severity_encoded",
+    "hba",
+    "mch",
+    "rbc_hb_ratio",
+    "rbc"
+  ]
+}

@@ -88,6 +88,16 @@ The dataset contains **203 patient samples** with Complete Blood Count (CBC) par
 
 ## 💼 ML Business Case
 
+### CRISP-DM Methodology
+This project follows the **Cross-Industry Standard Process for Data Mining (CRISP-DM)** methodology:
+
+1. **Business Understanding**: Thalassemia screening challenges in healthcare
+2. **Data Understanding**: CBC parameters and hemoglobin electrophoresis analysis  
+3. **Data Preparation**: Feature engineering and clinical indicator creation
+4. **Modeling**: XGBoost with SMOTE and hyperparameter optimization
+5. **Evaluation**: Clinical performance metrics and validation
+6. **Deployment**: Streamlit dashboard for healthcare professionals
+
 ### Problem Statement
 Traditional thalassemia screening relies on manual interpretation of CBC results and expensive genetic testing. An automated screening tool could:
 - Reduce diagnostic delays
